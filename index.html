@@ -55,6 +55,16 @@
     <button>Trigger a Global Error</button>
   </section>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "300719829c39493b827dfa728bb69fc6"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+
+  
+
   <script>
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
@@ -62,11 +72,96 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try{ 
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }catch(err){
+        alert('error') 
+      }finally{
+        alert('finally')
+      }
+      
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
     // TODO - Make buttons functional
+    errorBtns[0].addEventListener('click', (event) => {
+      console.log('console log')
+    })
+
+    errorBtns[1].addEventListener('click', (event) => {
+      console.error('console error')
+      TrackJS.track("Testing TrackJS!");
+    });
+
+    errorBtns[2].addEventListener('click', (event) => {
+      console.dir(document.head)
+    });
+
+    errorBtns[3].addEventListener('click', (event) => {
+      console.dirxml(document)
+    });
+
+    errorBtns[4].addEventListener('click', (event) => {
+      console.group('console group start')
+    });
+
+    errorBtns[5].addEventListener('click', (event) => {
+      console.groupEnd("console group end")
+    });
+
+    errorBtns[6].addEventListener('click', (event) => {
+      console.table([
+        {
+          first: 'chandeler',
+          last: 'bing',
+        },
+        {
+          first: 'monica',
+          last: 'gellar', 
+        }, 
+        {
+          first: 'rachel',
+          last: "green", 
+        }
+      ]); 
+    });
+
+    errorBtns[7].addEventListener('click', (event) => {
+      console.time()
+    });
+
+    errorBtns[8].addEventListener('click', (event) => {
+      console.timeEnd() 
+    });
+
+    errorBtns[9].addEventListener('click', (event) => {
+      const first = () => { second(); };
+      const second = () => { third(); };
+      const third = () => { fourth(); };
+      const fourth = () => { console.trace(); };
+      first();
+    });
+
+    errorBtns[10].addEventListener('click', (event) => {
+      trigger.global.error; 
+    });
+
+    class customError extends Error{
+        constructor(message) {
+          super(message); 
+          this.name = "customError"; 
+        }
+
+      }
+
+      function test() {
+        throw new customError("oopsies!");
+      }
+
+    
+    
+
   </script>
 </body>
 </html>
